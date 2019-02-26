@@ -13,7 +13,7 @@ While standing in the rstatus directory:
 
 # Usage
 
-`while true; do
+```while true; do
   xsetroot -name "$(rstatus)"
   sleep 1m # update every minute
-done & `
+done & ```
