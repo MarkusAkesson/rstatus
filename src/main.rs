@@ -21,7 +21,7 @@ fn get_vpn_status() -> String {
                 String::from("Disconnected")
             };
             format!(
-                "VPN status: {}, VPN Server: {} ",
+                "VPN status: {} VPN Server: {} ",
                     connected, body["mullvad_exit_ip_hostname"]
             )
         }
