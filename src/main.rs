@@ -15,9 +15,14 @@ fn get_vpn_status() -> String {
         Err(_) => String::from("VPN: Error"),
         Ok(_) => {
             let body: Value = res.unwrap().json().unwrap();
+            let connected = if body["mullvad_exit_ip"].as_bool().unwrap() {
+                    String::from("Connected")
+            } else {
+                String::from("Disconnected")
+            };
             format!(
-                "VPN: Connected: {}, Sever: {} ",
-                body["mullvad_exit_ip"], body["mullvad_exit_ip_hostname"]
+                "VPN status: {}, VPN Server: {} ",
+                    connected, body["mullvad_exit_ip_hostname"]
             )
         }
     };
