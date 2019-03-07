@@ -5,7 +5,7 @@ use chrono::prelude::*;
 fn main() {
     let vpn_status = get_vpn_status();
     let date = get_date();
-    println!("{}{}", vpn_status, date);
+    println!("{} | {}", vpn_status, date);
 }
 
 fn get_vpn_status() -> String {
@@ -21,7 +21,7 @@ fn get_vpn_status() -> String {
                 String::from("Disconnected")
             };
             format!(
-                "VPN status: {} VPN Server: {} ",
+                "VPN status: {} | VPN Server: {}",
                     connected, body["mullvad_exit_ip_hostname"]
             )
         }
