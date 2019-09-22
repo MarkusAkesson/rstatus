@@ -1,6 +1,6 @@
+use chrono::prelude::*;
 use reqwest;
 use serde_json::Value;
-use chrono::prelude::*;
 
 fn main() {
     let vpn_status = get_vpn_status();
@@ -16,20 +16,19 @@ fn get_vpn_status() -> String {
         Ok(_) => {
             let body: Value = res.unwrap().json().unwrap();
             let connected = if body["mullvad_exit_ip"].as_bool().unwrap() {
-                    String::from("Connected")
+                String::from("Connected")
             } else {
                 String::from("Disconnected")
             };
             format!(
                 "VPN status: {} | VPN Server: {}",
-                    connected, body["mullvad_exit_ip_hostname"]
+                connected, body["mullvad_exit_ip_hostname"]
             )
         }
     };
 
     status
 }
-
 
 fn get_date() -> String {
     let now: DateTime<Local> = Local::now();
