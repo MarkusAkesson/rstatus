@@ -1,6 +1,7 @@
+use std::process::Command;
+use std::str;
+
 use chrono::prelude::*;
-use reqwest;
-use serde_json::Value;
 
 fn main() {
     let vpn_status = get_vpn_status();
@@ -9,25 +10,23 @@ fn main() {
 }
 
 fn get_vpn_status() -> String {
-    let res = reqwest::get("https://am.i.mullvad.net/json");
+    let output = Command::new("nmcli")
+        .arg("connection")
+        .output()
+        .expect("failed to run nmcli");
 
-    let status = match res {
-        Err(_) => String::from("VPN: Error"),
-        Ok(_) => {
-            let body: Value = res.unwrap().json().unwrap();
-            let connected = if body["mullvad_exit_ip"].as_bool().unwrap() {
-                String::from("Connected")
-            } else {
-                String::from("Disconnected")
-            };
-            format!(
-                "VPN status: {} | VPN Server: {}",
-                connected, body["mullvad_exit_ip_hostname"]
-            )
+    let output = str::from_utf8(&output.stdout).expect("Got invalid utf-8 on stdout");
+
+    for line in output.lines() {
+        if !line.contains("wireguard") {
+            continue;
         }
-    };
+        let cols = line.split_whitespace();
+        let server = cols.last().unwrap();
+        return String::from(format!("VPN: {}", server));
+    }
 
-    status
+    String::from("VPN: not connected")
 }
 
 fn get_date() -> String {
